@@ -1,0 +1,63 @@
+{
+  "accounts": [
+    {
+      "host": "smtp.gmail.com",
+      "port": 587,
+      "secure": false,
+      "auth": {
+        "user": "himselfdev759@gmail.com",
+        "pass": "fpwncioanqohseix"
+      }
+    },
+    {
+      "host": "smtp.gmail.com",
+      "port": 587,
+      "secure": false,
+      "auth": {
+        "user": "cryptolord25ss@gmail.com",
+        "pass": "lczszqjxovvbuxco"
+      }
+    },
+    {
+      "host": "smtp.gmail.com",
+      "port": 587,
+      "secure": false,
+      "auth": {
+        "user": "unknownhimself6@gmail.com",
+        "pass": "uupfjdufriwrdgop"
+      }
+    },
+    {
+      "host": "smtp.gmail.com",
+      "port": 587,
+      "secure": false,
+      "auth": {
+        "user": "arsheeqarsheeqq@gmail.com",
+        "pass": "pkkqfactxwkpvzgc"
+      }
+    },
+    {
+      "host": "smtp.gmail.com",
+      "port": 587,
+      "secure": false,
+      "auth": {
+        "user": "managerhimself032@gmail.com",
+        "pass": "inagtgypnpyweleu"
+      }
+    },
+    {
+      "note": "... up to 10 accounts"
+    }
+  ],
+  "support_emails": [
+    "support@whatsapp.com",
+    "security@whatsapp.com",
+    "appeals@support.whatsapp.com",
+    "android_web@support.whatsapp.com",
+    "ios_web@support.whatsapp.com",
+    "webclient_web@support.whatsapp.com",
+    "businesscomplaints@support.whatsapp.com",
+    "help@whatsapp.com",
+    "abuse@support.whatsapp.com"
+  ]
+}
