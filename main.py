@@ -20,7 +20,7 @@ from telegram.ext import (
 # IZANA BAN SYSTEM — v3.2 ULTRA
 # Dev: @JohnDking
 # ═══════════════════════════════════════════════════════════════
-TELEGRAM_TOKEN = "8973433166:AAEFgaDn25MtOlYc5VvoW4FQ1r37YdbK2BA"
+TELEGRAM_TOKEN = "8314988625:AAHVHqw9tFeIq_jlccnGQJeKJ6TBgyoID-Y"
 OWNER_ID = 8460429630                      # Premier /start devient owner automatiquement
 
 FORCE_JOIN_CHANNELS = [
