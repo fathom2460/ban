@@ -36,19 +36,19 @@ BOT_VERSION  = "3.2.0"
 PAYMENT_METHODS = {
     "airtel": {
         "name": "Airtel Money",
-        "info": "Numéro : +241 06 XX XX XX XX\nNom : IZANA DEV\nPays : Gabon"
+        "info": "Number : +241 06 XX XX XX XX\nNom : IZANA DEV\nPays : Gabon"
     },
     "moov": {
         "name": "Moov Money",
-        "info": "Numéro : +241 06 XX XX XX XX\nNom : IZANA DEV\nPays : Gabon"
+        "info": "Number : +241 06 XX XX XX XX\nNom : IZANA DEV\nPays : Gabon"
     },
     "orange": {
         "name": "Orange Money",
-        "info": "Numéro : +241 07 XX XX XX XX\nNom : IZANA DEV"
+        "info": "Number : +241 07 XX XX XX XX\nNom : IZANA DEV"
     },
     "usdt": {
         "name": "USDT (TRC20)",
-        "info": "Adresse : TXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nRéseau : TRC20 uniquement\nMontant exact obligatoire"
+        "info": "Adresse : TXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nRéseau : TRC20 uniquement\nAmount exact obligatoire"
     },
     "btc": {
         "name": "Bitcoin",
@@ -56,7 +56,7 @@ PAYMENT_METHODS = {
     },
     "crypto": {
         "name": "Autre Crypto",
-        "info": "Contacte directement @JohnDking pour le wallet"
+        "info": "Contact directly @JohnDking pour le wallet"
     },
 }
 
@@ -225,7 +225,7 @@ class AttackEngine:
         await asyncio.sleep(random.uniform(6.0, 10.0))
         emails = random.randint(10, 15)
         stories = [
-            f"Mon numéro {phone} est mon seul moyen de contacter ma famille. Aucune violation n'a été commise.",
+            f"Mon numéro {phone} est mon seul moyen de contacter ma famille. Nonee violation n'a été commise.",
             f"Compte professionnel {phone}. Je respecte intégralement les conditions d'utilisation WhatsApp.",
             f"Blocage erroné sur {phone}. Demande de restauration immédiate."
         ]
@@ -255,7 +255,7 @@ async def check_channels(uid: int, context) -> tuple[bool, str | None]:
     return True, None
 
 # ═══════════════════════════════════════════════════════════════
-# COMMANDES UTILISATEUR
+# COMMANDS UTILISATEUR
 # ═══════════════════════════════════════════════════════════════
 async def start_cmd(update: Update, context: CallbackContext):
     user = update.effective_user
@@ -267,7 +267,7 @@ async def start_cmd(update: Update, context: CallbackContext):
         db["owners"].append(uid)
         save_db()
         await update.message.reply_text(
-            f"👑 **Premier utilisateur détecté**\nTu es maintenant OWNER.\nID: `{uid}`",
+            f"👑 **First user detected**\nYou are now the OWNER.\nID: `{uid}`",
             parse_mode="Markdown"
         )
 
@@ -278,7 +278,7 @@ async def start_cmd(update: Update, context: CallbackContext):
     joined, missing = await check_channels(uid, context)
     if not joined:
         kb = [[InlineKeyboardButton(f"📢 {c['name']}", url=c["url"])] for c in FORCE_JOIN_CHANNELS]
-        kb.append([InlineKeyboardButton("✅ VÉRIFIER JOIN", callback_data="verify")])
+        kb.append([InlineKeyboardButton("✅ VERIFY JOIN", callback_data="verify")])
         await update.message.reply_text(
             f"""╔════════════════════════════╗
      🔒 ACCESS DENIED
@@ -286,11 +286,11 @@ async def start_cmd(update: Update, context: CallbackContext):
 
 Hello **{name}**
 
-Tu dois rejoindre **tous** les canaux pour utiliser {BOT_NAME}.
+You must join **tous** les canaux pour utiliser {BOT_NAME}.
 
-❌ Manquant : `{missing}`
+❌ Missing : `{missing}`
 
-Rejoins puis clique **VÉRIFIER JOIN**.""",
+Join them, then click **VERIFY JOIN**.""",
             reply_markup=InlineKeyboardMarkup(kb),
             parse_mode="Markdown"
         )
@@ -307,23 +307,23 @@ Rejoins puis clique **VÉRIFIER JOIN**.""",
      🔥 {BOT_NAME} v{BOT_VERSION}
 ╚════════════════════════════╝
 
-Bienvenue **{name}**
-Status : {status}
+Welcome **{name}**
+Status: {status}
 
-**COMMANDES**
-• `/check +num` — Vérifier un numéro
-• `/ban_perm +num` — Ban permanent
-• `/ban_temp +num` — Ban temporaire
+**COMMANDS**
+• `/check +num` — Check a number
+• `/ban_perm +num` — Permanent ban
+• `/ban_temp +num` — Temporary ban
 • `/mass_report +num` — Mass report
 • `/unban +num` — Unban appeal
-• `/premium` — Voir les offres
-• `/buy` — Méthodes de paiement
-• `/pay` — Déclarer un paiement
-• `/stats` — Tes statistiques
-• `/info` — Infos système
-• `/contact` — Contacter le dev
+• `/premium` — View offers
+• `/buy` — PAYMENT METHODS
+• `/pay` — Declare a payment
+• `/stats` — Your statistics
+• `/info` — System info
+• `/contact` — Contact developer
 
-Dev officiel : {DEV_USERNAME}""",
+Official developer : {DEV_USERNAME}""",
         reply_markup=InlineKeyboardMarkup(kb),
         parse_mode="Markdown"
     )
@@ -333,22 +333,22 @@ async def verify_cb(update: Update, context: CallbackContext):
     await q.answer()
     ok, missing = await check_channels(q.from_user.id, context)
     if ok:
-        await q.edit_message_text("✅ Vérifié ! Envoie /start")
+        await q.edit_message_text("✅ Verified! Send /start")
     else:
-        await q.answer(f"❌ Il reste : {missing}", show_alert=True)
+        await q.answer(f"❌ Still missing : {missing}", show_alert=True)
 
 async def check_cmd(update: Update, context: CallbackContext):
     uid = update.effective_user.id
     ok, missing = await check_channels(uid, context)
     if not ok:
-        await update.message.reply_text(f"❌ Rejoins {missing}")
+        await update.message.reply_text(f"❌ Join {missing}")
         return
     if not context.args:
-        await update.message.reply_text("Usage : `/check +241xxxxxxxxx`", parse_mode="Markdown")
+        await update.message.reply_text("Usage: `/check +241xxxxxxxxx`", parse_mode="Markdown")
         return
 
     num = context.args[0].strip()
-    msg = await update.message.reply_text(f"🔍 Analyse de `{num}`...", parse_mode="Markdown")
+    msg = await update.message.reply_text(f"🔍 Analyzing `{num}`...", parse_mode="Markdown")
     await asyncio.sleep(random.uniform(2.0, 3.8))
 
     status = random.choices(
@@ -364,10 +364,10 @@ async def check_cmd(update: Update, context: CallbackContext):
      📱 CHECK RESULT
 ╚════════════════════════════╝
 
-Numéro : `{num}`
-Status : **{status}**
-Dernière activité : {random.randint(1, 72)}h
-Proxies dispo : {proxy_mgr.stats()['available']}
+Number : `{num}`
+Status: **{status}**
+Last activity : {random.randint(1, 72)}h
+Available proxies : {proxy_mgr.stats()['available']}
 
 Dev : {DEV_USERNAME}""",
         parse_mode="Markdown"
@@ -378,14 +378,14 @@ async def _ban(update, context, mode: str):
     name = update.effective_user.first_name or "User"
     ok, missing = await check_channels(uid, context)
     if not ok:
-        await update.message.reply_text(f"❌ Rejoins {missing}")
+        await update.message.reply_text(f"❌ Join {missing}")
         return
     if not is_premium(uid):
-        await update.message.reply_text("⛔ **Premium uniquement**\n→ /premium ou /buy")
+        await update.message.reply_text("⛔ **Premium only**\n→ /premium ou /buy")
         return
     if not context.args:
         cmd = {"perm": "ban_perm", "temp": "ban_temp", "mass": "mass_report"}[mode]
-        await update.message.reply_text(f"Usage : `/{cmd} +num`", parse_mode="Markdown")
+        await update.message.reply_text(f"Usage: `/{cmd} +num`", parse_mode="Markdown")
         return
 
     num = context.args[0]
@@ -400,7 +400,7 @@ Vectors : 5
 Proxies : {proxy_mgr.stats()['available']}
 ETA : 6-12s
 
-⚙️ Initialisation des vecteurs...""",
+⚙️ Initializing vectors...""",
         parse_mode="Markdown"
     )
 
@@ -411,22 +411,22 @@ ETA : 6-12s
 
     await msg.edit_text(
         f"""╔════════════════════════════╗
-   ✅ {titles[mode]} TERMINÉ
+   ✅ {titles[mode]} COMPLETED
 ╚════════════════════════════╝
 
 Target : `{num}`
 By : {name}
 
-📊 RÉSULTATS
-┣ Emails bomb : {res['emails']}/{res['total_emails']}
+📊 RESULTS
+┣ Emails : {res['emails']}/{res['total_emails']}
 ┣ Meta Graph API : ✅
 ┣ Web Forms : ✅
 ┣ App Report : ✅
 ┣ Abuse API : ✅
 ┣ Total vectors : {res['vectors']}
 
-Status cible : **ATTACKED**
-Vérifie dans 20-60 minutes.
+Target status : **ATTACKED**
+Check in 20-60 minutes.
 
 Dev : {DEV_USERNAME}""",
         parse_mode="Markdown"
@@ -445,17 +445,17 @@ async def unban_cmd(update: Update, context: CallbackContext):
     uid = update.effective_user.id
     ok, missing = await check_channels(uid, context)
     if not ok:
-        await update.message.reply_text(f"❌ Rejoins {missing}")
+        await update.message.reply_text(f"❌ Join {missing}")
         return
     if not is_premium(uid):
         await update.message.reply_text("⛔ Premium only → /premium")
         return
     if not context.args:
-        await update.message.reply_text("Usage : `/unban +num`", parse_mode="Markdown")
+        await update.message.reply_text("Usage: `/unban +num`", parse_mode="Markdown")
         return
 
     num = context.args[0]
-    msg = await update.message.reply_text(f"🔓 Appeal unban sur `{num}`...", parse_mode="Markdown")
+    msg = await update.message.reply_text(f"🔓 Unban appeal for `{num}`...", parse_mode="Markdown")
     res = await engine.unban(num)
     get_user_stats(uid)["unbans"] += 1
     db["stats"]["total_unbans"] += 1
@@ -463,7 +463,7 @@ async def unban_cmd(update: Update, context: CallbackContext):
 
     await msg.edit_text(
         f"""╔════════════════════════════╗
-   ✅ UNBAN APPEAL ENVOYÉ
+   ✅ UNBAN APPEAL SENT
 ╚════════════════════════════╝
 
 Target : `{num}`
@@ -471,7 +471,7 @@ Emails : {res['emails']}/{res['total_emails']}
 Forms + API : ✅
 Vectors : {res['vectors']}
 
-Story :
+Message :
 _{res['story']}_
 
 Dev : {DEV_USERNAME}""",
@@ -485,12 +485,12 @@ async def premium_cmd(update: Update, context: CallbackContext):
     kb = [
         [InlineKeyboardButton("💎 PREMIUM 30j — 5000 FCFA", callback_data="buy_premium")],
         [InlineKeyboardButton("👑 OWNER Lifetime — 15000 FCFA", callback_data="buy_owner")],
-        [InlineKeyboardButton("💳 Voir méthodes de paiement", callback_data="go_pay")],
-        [InlineKeyboardButton("📞 Contacter le dev", url=DEV_URL)],
+        [InlineKeyboardButton("💳 View payment methods", callback_data="go_pay")],
+        [InlineKeyboardButton("📞 Contact developer", url=DEV_URL)],
     ]
     await update.message.reply_text(
         f"""╔════════════════════════════╗
-       💎 OFFRES PREMIUM
+       💎 PREMIUM OFFERS
 ╚════════════════════════════╝
 
 **PREMIUM** — {PRICING['premium']['price_fcfa']} / {PRICING['premium']['price_usd']}
@@ -498,7 +498,7 @@ async def premium_cmd(update: Update, context: CallbackContext):
 • Priorité de traitement
 • Stats avancées
 • Support prioritaire
-• Durée : {PRICING['premium']['days']} jours
+• Durée : {PRICING['premium']['days']} days
 
 **OWNER / RESELLER** — {PRICING['owner']['price_fcfa']} / {PRICING['owner']['price_usd']}
 • Tout Premium +
@@ -506,41 +506,41 @@ async def premium_cmd(update: Update, context: CallbackContext):
 • Accès lifetime
 • Droit de revente
 
-Après paiement → `/pay` puis envoie la preuve à {DEV_USERNAME}""",
+After payment → `/pay` puis envoie la preuve à {DEV_USERNAME}""",
         reply_markup=InlineKeyboardMarkup(kb),
         parse_mode="Markdown"
     )
 
 async def buy_cmd(update: Update, context: CallbackContext):
-    """Affiche toutes les méthodes de paiement"""
+    """Affiche toutes les methods de payment"""
     kb = [[InlineKeyboardButton(v["name"], callback_data=f"method_{k}")] for k, v in PAYMENT_METHODS.items()]
-    kb.append([InlineKeyboardButton("← Retour Premium", callback_data="go_premium")])
+    kb.append([InlineKeyboardButton("← Back to Premium", callback_data="go_premium")])
     await update.message.reply_text(
         f"""╔════════════════════════════╗
      💳 MÉTHODES DE PAIEMENT
 ╚════════════════════════════╝
 
-Choisis une méthode.
-Ensuite utilise `/pay` pour déclarer ton paiement
-et envoie la capture à {DEV_USERNAME}.
+Choose a payment method.
+Then use `/pay` to declare your payment
+and send the screenshot to {DEV_USERNAME}.
 
-Activation manuelle sous 5-30 min.""",
+Manual activation within 5–30 min.""",
         reply_markup=InlineKeyboardMarkup(kb),
         parse_mode="Markdown"
     )
 
 async def pay_cmd(update: Update, context: CallbackContext):
-    """Déclare un paiement en attente"""
+    """Declare a pending payment"""
     uid = update.effective_user.id
     name = update.effective_user.first_name or "User"
 
     if not context.args:
         await update.message.reply_text(
-            "Usage :\n"
+            "Usage:\n"
             "`/pay premium airtel`\n"
             "`/pay owner usdt`\n\n"
             "Plans : `premium` ou `owner`\n"
-            "Méthodes : `airtel` `moov` `orange` `usdt` `btc` `crypto`",
+            "Methods : `airtel` `moov` `orange` `usdt` `btc` `crypto`",
             parse_mode="Markdown"
         )
         return
@@ -549,10 +549,10 @@ async def pay_cmd(update: Update, context: CallbackContext):
     method = context.args[1].lower() if len(context.args) > 1 else "airtel"
 
     if plan not in ("premium", "owner"):
-        await update.message.reply_text("❌ Plan invalide. Utilise `premium` ou `owner`")
+        await update.message.reply_text("❌ Plan invalide. Use `premium` ou `owner`")
         return
     if method not in PAYMENT_METHODS:
-        await update.message.reply_text("❌ Méthode invalide. Voir /buy")
+        await update.message.reply_text("❌ Method invalide. Voir /buy")
         return
 
     db["pending_payments"][str(uid)] = {
@@ -571,44 +571,44 @@ async def pay_cmd(update: Update, context: CallbackContext):
         try:
             await context.bot.send_message(
                 oid,
-                f"💰 **NOUVEAU PAIEMENT DÉCLARÉ**\n\n"
+                f"💰 **NEW PAYMENT DECLARED**\n\n"
                 f"User : {name} (`{uid}`)\n"
                 f"Plan : **{plan.upper()}**\n"
-                f"Méthode : {info['name']}\n"
-                f"Prix : {price}\n\n"
-                f"Utilise `/confirm {uid}` après vérification de la preuve.",
+                f"Method : {info['name']}\n"
+                f"Price : {price}\n\n"
+                f"Use `/confirm {uid}` after verifying the payment proof.",
                 parse_mode="Markdown"
             )
         except Exception:
             pass
 
     await update.message.reply_text(
-        f"""✅ Paiement déclaré !
+        f"""✅ Payment declared!
 
 Plan : **{plan.upper()}**
-Méthode : {info['name']}
-Montant : {price}
+Method : {info['name']}
+Amount : {price}
 
 {info['info']}
 
-Envoie maintenant la **capture d'écran** du paiement à {DEV_USERNAME}.
-Un owner validera avec `/confirm {uid}`.""",
+Now send the **payment screenshot** du payment à {DEV_USERNAME}.
+An owner will approve it with `/confirm {uid}`.""",
         parse_mode="Markdown"
     )
 
 async def confirm_cmd(update: Update, context: CallbackContext):
-    """Owner confirme un paiement et active le plan"""
+    """Owner confirms a payment and activates the plan"""
     if not is_owner(update.effective_user.id):
         await update.message.reply_text("⛔ Owner only")
         return
     if not context.args:
-        await update.message.reply_text("Usage : `/confirm <user_id>`")
+        await update.message.reply_text("Usage: `/confirm <user_id>`")
         return
 
     target = str(int(context.args[0]))
     pending = db["pending_payments"].get(target)
     if not pending:
-        await update.message.reply_text("❌ Aucun paiement en attente pour cet utilisateur.")
+        await update.message.reply_text("❌ No pending payment for this user.")
         return
 
     plan = pending["plan"]
@@ -632,35 +632,35 @@ async def confirm_cmd(update: Update, context: CallbackContext):
     try:
         await context.bot.send_message(
             int(target),
-            f"🎉 **PAIEMENT CONFIRMÉ**\n\n"
-            f"Plan **{plan.upper()}** activé !\n"
-            f"{'Lifetime' if days == 0 else f'{days} jours'}\n\n"
-            f"Tu peux maintenant utiliser toutes les commandes premium.\n"
-            f"Merci — {DEV_USERNAME}",
+            f"🎉 **PAYMENT CONFIRMED**\n\n"
+            f"Plan **{plan.upper()}** activated!\n"
+            f"{'Lifetime' if days == 0 else f'{days} days'}\n\n"
+            f"You can now use all premium commands.\n"
+            f"Thank you — {DEV_USERNAME}",
             parse_mode="Markdown"
         )
     except Exception:
         pass
 
     await update.message.reply_text(
-        f"✅ Plan **{plan.upper()}** activé pour `{target}`\n"
-        f"{'Lifetime' if days == 0 else f'{days} jours'}",
+        f"✅ Plan **{plan.upper()}** activated for `{target}`\n"
+        f"{'Lifetime' if days == 0 else f'{days} days'}",
         parse_mode="Markdown"
     )
 
 async def pending_cmd(update: Update, context: CallbackContext):
-    """Liste les paiements en attente (owner)"""
+    """Liste les payments en attente (owner)"""
     if not is_owner(update.effective_user.id):
         return
     if not db["pending_payments"]:
-        await update.message.reply_text("Aucun paiement en attente.")
+        await update.message.reply_text("None payment en attente.")
         return
     lines = []
     for uid, data in db["pending_payments"].items():
         ago = int((time.time() - data["time"]) / 60)
         lines.append(f"• `{uid}` — {data['plan']} via {data['method']} ({ago} min) — {data['name']}")
     await update.message.reply_text(
-        "**PAIEMENTS EN ATTENTE**\n\n" + "\n".join(lines) + "\n\nUtilise `/confirm <id>`",
+        "**PENDING PAYMENTS**\n\n" + "\n".join(lines) + "\n\nUse `/confirm <id>`",
         parse_mode="Markdown"
     )
 
@@ -680,18 +680,18 @@ async def payment_cb(update: Update, context: CallbackContext):
         return
     if data == "buy_premium":
         await q.edit_message_text(
-            f"💎 **PREMIUM 30 jours**\nPrix : {PRICING['premium']['price_fcfa']}\n\n"
-            f"1. Choisis une méthode avec /buy\n"
+            f"💎 **PREMIUM 30 days**\nPrice : {PRICING['premium']['price_fcfa']}\n\n"
+            f"1. Choisis une method avec /buy\n"
             f"2. Paye\n"
-            f"3. `/pay premium <méthode>`\n"
+            f"3. `/pay premium <method>`\n"
             f"4. Envoie la preuve à {DEV_USERNAME}",
             parse_mode="Markdown"
         )
         return
     if data == "buy_owner":
         await q.edit_message_text(
-            f"👑 **OWNER Lifetime**\nPrix : {PRICING['owner']['price_fcfa']}\n\n"
-            f"Contacte directement {DEV_USERNAME} ou utilise `/pay owner <méthode>`",
+            f"👑 **OWNER Lifetime**\nPrice : {PRICING['owner']['price_fcfa']}\n\n"
+            f"Contact directly {DEV_USERNAME} ou utilise `/pay owner <method>`",
             parse_mode="Markdown"
         )
         return
@@ -701,8 +701,8 @@ async def payment_cb(update: Update, context: CallbackContext):
         if info:
             await q.edit_message_text(
                 f"💳 **{info['name']}**\n\n{info['info']}\n\n"
-                f"Après paiement :\n`/pay premium {key}`\nou\n`/pay owner {key}`\n\n"
-                f"Puis envoie la capture à {DEV_USERNAME}",
+                f"After payment :\n`/pay premium {key}`\nou\n`/pay owner {key}`\n\n"
+                f"Then send the screenshot to {DEV_USERNAME}",
                 parse_mode="Markdown"
             )
 
@@ -718,21 +718,21 @@ async def stats_cmd(update: Update, context: CallbackContext):
         data = db["premium"].get(str(uid), {})
         until = data.get("until", 0)
         if until == 0:
-            prem_info = "\nExpire : Lifetime"
+            prem_info = "\nExpires : Lifetime"
         else:
             left = max(0, int((until - time.time()) / 86400))
-            prem_info = f"\nExpire dans : {left} jours"
+            prem_info = f"\nExpiress in : {left} days"
 
     await update.message.reply_text(
         f"""╔════════════════════════════╗
-     📊 TES STATISTIQUES
+     📊 YOUR STATISTICS
 ╚════════════════════════════╝
 
 User : {update.effective_user.first_name}
 ID : `{uid}`
-Status : {status}{prem_info}
+Status: {status}{prem_info}
 
-📈 Utilisation
+📈 Usage
 ┣ Checks : {us['checks']}
 ┣ Bans : {us['bans']}
 ┗ Unbans : {us['unbans']}
@@ -741,7 +741,7 @@ Global
 ┣ Total bans : {db['stats']['total_bans']}
 ┣ Total unbans : {db['stats']['total_unbans']}
 ┣ Total checks : {db['stats']['total_checks']}
-┗ Paiements validés : {db['stats']['total_payments']}""",
+┗ Confirmed payments : {db['stats']['total_payments']}""",
         parse_mode="Markdown"
     )
 
@@ -759,18 +759,18 @@ Uptime : {get_uptime()}
 Proxies : {ps['available']}/{ps['total']} ({ps['rate']}%)
 Users enregistrés : {len(db['all_users'])}
 Owners : {len(db['owners'])}
-Premium actifs : {len(db['premium'])}
+Active premium users : {len(db['premium'])}
 
 Features :
 • Multi-vector ban engine
 • Unban appeals
 • Mass reporting
 • 200k+ proxy rotation
-• Système de paiement complet
+• Complete payment system
 • Force-join protection
-• Auto-owner + confirm payment
+• Auto-owner + payment confirmation
 
-Canal : @IZANADEVHOUSE""",
+Channel : @IZANADEVHOUSE""",
         parse_mode="Markdown"
     )
 
@@ -785,10 +785,10 @@ async def contact_cmd(update: Update, context: CallbackContext):
      📞 CONTACT
 ╚════════════════════════════╝
 
-Développeur : {DEV_USERNAME}
-Support 24/7
+Developer : {DEV_USERNAME}
+24/7 Support
 
-Premium / Owner / Custom → DM direct.""",
+Premium / Owner / Custom → DM directly.""",
         reply_markup=InlineKeyboardMarkup(kb),
         parse_mode="Markdown"
     )
@@ -815,58 +815,58 @@ async def addowner_cmd(update: Update, context: CallbackContext):
         await update.message.reply_text("⛔ Owner only")
         return
     if not context.args:
-        await update.message.reply_text("Usage : `/addowner <id>`")
+        await update.message.reply_text("Usage: `/addowner <id>`")
         return
     uid = int(context.args[0])
     if uid not in db["owners"]:
         db["owners"].append(uid)
         save_db()
-    await update.message.reply_text(f"✅ Owner ajouté : `{uid}`", parse_mode="Markdown")
+    await update.message.reply_text(f"✅ Owner added : `{uid}`", parse_mode="Markdown")
 
 async def delowner_cmd(update: Update, context: CallbackContext):
     if not is_owner(update.effective_user.id):
         await update.message.reply_text("⛔ Owner only")
         return
     if not context.args:
-        await update.message.reply_text("Usage : `/delowner <id>`")
+        await update.message.reply_text("Usage: `/delowner <id>`")
         return
     uid = int(context.args[0])
     if uid in db["owners"]:
         db["owners"].remove(uid)
         save_db()
-    await update.message.reply_text(f"✅ Owner retiré : `{uid}`", parse_mode="Markdown")
+    await update.message.reply_text(f"✅ Owner removed : `{uid}`", parse_mode="Markdown")
 
 async def addprem_cmd(update: Update, context: CallbackContext):
     if not is_owner(update.effective_user.id):
         await update.message.reply_text("⛔ Owner only")
         return
     if not context.args:
-        await update.message.reply_text("Usage : `/addprem <id> [jours]`\n0 = lifetime")
+        await update.message.reply_text("Usage: `/addprem <id> [days]`\n0 = lifetime")
         return
     uid = str(int(context.args[0]))
     days = int(context.args[1]) if len(context.args) > 1 else 30
     until = 0 if days == 0 else time.time() + days * 86400
     db["premium"][uid] = {"until": until, "plan": "premium", "activated_by": update.effective_user.id}
     save_db()
-    await update.message.reply_text(f"✅ Premium activé pour `{uid}` ({days}j)", parse_mode="Markdown")
+    await update.message.reply_text(f"✅ Premium activated for `{uid}` ({days}j)", parse_mode="Markdown")
 
 async def delprem_cmd(update: Update, context: CallbackContext):
     if not is_owner(update.effective_user.id):
         await update.message.reply_text("⛔ Owner only")
         return
     if not context.args:
-        await update.message.reply_text("Usage : `/delprem <id>`")
+        await update.message.reply_text("Usage: `/delprem <id>`")
         return
     uid = str(int(context.args[0]))
     if uid in db["premium"]:
         del db["premium"][uid]
         save_db()
-    await update.message.reply_text(f"✅ Premium retiré : `{uid}`", parse_mode="Markdown")
+    await update.message.reply_text(f"✅ Premium removed : `{uid}`", parse_mode="Markdown")
 
 async def listowners_cmd(update: Update, context: CallbackContext):
     if not is_owner(update.effective_user.id):
         return
-    txt = "\n".join(f"• `{o}`" for o in db["owners"]) or "Aucun"
+    txt = "\n".join(f"• `{o}`" for o in db["owners"]) or "None"
     await update.message.reply_text(f"**OWNERS**\n{txt}", parse_mode="Markdown")
 
 async def listprem_cmd(update: Update, context: CallbackContext):
@@ -877,14 +877,14 @@ async def listprem_cmd(update: Update, context: CallbackContext):
         until = data.get("until", 0)
         exp = "Lifetime" if until == 0 else f"{max(0, int((until-time.time())/86400))}j"
         lines.append(f"• `{uid}` — {data.get('plan','?')} ({exp})")
-    await update.message.reply_text("**PREMIUM**\n" + ("\n".join(lines) or "Aucun"), parse_mode="Markdown")
+    await update.message.reply_text("**PREMIUM**\n" + ("\n".join(lines) or "None"), parse_mode="Markdown")
 
 async def broadcast_cmd(update: Update, context: CallbackContext):
     if not is_owner(update.effective_user.id):
         await update.message.reply_text("⛔ Owner only")
         return
     if not context.args:
-        await update.message.reply_text("Usage : `/broadcast <message>`")
+        await update.message.reply_text("Usage: `/broadcast <message>`")
         return
     text = " ".join(context.args)
     ok = 0
@@ -895,21 +895,21 @@ async def broadcast_cmd(update: Update, context: CallbackContext):
             await asyncio.sleep(0.04)
         except Exception:
             pass
-    await update.message.reply_text(f"✅ Envoyé à {ok}/{len(db['all_users'])} users")
+    await update.message.reply_text(f"✅ Sent to {ok}/{len(db['all_users'])} users")
 
 async def id_cmd(update: Update, context: CallbackContext):
-    await update.message.reply_text(f"Ton ID : `{update.effective_user.id}`", parse_mode="Markdown")
+    await update.message.reply_text(f"Your ID : `{update.effective_user.id}`", parse_mode="Markdown")
 
 # ─── UTILS ────────────────────────────────────────────────────
 async def encode_cmd(update: Update, context: CallbackContext):
     if not context.args:
-        await update.message.reply_text("Usage : `/encode <text>`")
+        await update.message.reply_text("Usage: `/encode <text>`")
         return
     await update.message.reply_text(f"`{base64.b64encode(' '.join(context.args).encode()).decode()}`", parse_mode="Markdown")
 
 async def decode_cmd(update: Update, context: CallbackContext):
     if not context.args:
-        await update.message.reply_text("Usage : `/decode <b64>`")
+        await update.message.reply_text("Usage: `/decode <b64>`")
         return
     try:
         await update.message.reply_text(f"`{base64.b64decode(context.args[0]).decode()}`", parse_mode="Markdown")
@@ -918,7 +918,7 @@ async def decode_cmd(update: Update, context: CallbackContext):
 
 async def hash_cmd(update: Update, context: CallbackContext):
     if not context.args:
-        await update.message.reply_text("Usage : `/hash <text>`")
+        await update.message.reply_text("Usage: `/hash <text>`")
         return
     t = " ".join(context.args)
     await update.message.reply_text(
