@@ -24,10 +24,7 @@ TELEGRAM_TOKEN = "8314988625:AAHVHqw9tFeIq_jlccnGQJeKJ6TBgyoID-Y"
 OWNER_ID = 8460429630                      # Premier /start devient owner automatiquement
 
 FORCE_JOIN_CHANNELS = [
-    {"name": "IZANA DEV HOUSE",   "id": "@IZANADEVHOUSE",  "url": "https://t.me/IZANADEVHOUSE"},
-    {"name": "IZANA DEV HOUSES",  "id": "@izanadevhouses", "url": "https://t.me/izanadevhouses"},
-    {"name": "MRX BAN DEV",       "id": "@MRxBANdev",      "url": "https://t.me/MRxBANdev"},
-    {"name": "THE ROYAL GOD",     "id": "@Theroyalgod",    "url": "https://t.me/Theroyalgod"},
+    {"name": "a",   "id": "@a345678902",  "url": "t.me/a345678902"},
 ]
 
 DEV_USERNAME = "@JohnDking"
